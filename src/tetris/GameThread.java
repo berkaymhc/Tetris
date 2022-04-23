@@ -16,13 +16,15 @@ public class GameThread extends Thread
     {  
         while(true)
         {  
+            ga.spawnBlock();
+            while( ga.moveBlockDown())
+            {
             try {
-            ga.moveBlockDown();          
-            
-            Thread.sleep(1000);  
-        } 
-        catch (InterruptedException ex) {
-            Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
+                     Thread.sleep(100);  
+                } 
+                catch (InterruptedException ex) {
+                    Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
