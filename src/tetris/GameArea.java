@@ -25,7 +25,6 @@ public class GameArea extends JPanel {
         gridRows = this.getBounds().height / gridCellSize;
         
         background = new Color[gridRows][gridColumns];
-        background[0][0] = Color.green;
         
     }
       
@@ -36,7 +35,7 @@ public class GameArea extends JPanel {
     }
     public boolean moveBlockDown()
     {
-        if(checkBottom() == false)
+        if( !checkBottom())
         {
             moveBlockToBackground();
             return false;
@@ -47,6 +46,114 @@ public class GameArea extends JPanel {
         return true;
     }
     
+    
+    
+    public void movedBlockRight()
+    {   if( !checkRight())return;
+       
+        block.moveRight();
+        repaint();
+    }
+    
+    public void movedBlockLeft()
+    {   if( !checkLeft())return;
+    
+        block.moveLeft();
+        repaint();
+    }
+    
+    public void dropBlock()
+    {
+        while(checkBottom())
+        
+        block.moveDown();
+        repaint();
+     
+    }
+    
+    public void rotateBlock()
+    {
+        block.rotate();
+        repaint();
+    }
+    
+    private boolean checkBottom()
+    {
+        if(block.getBottomEdge()== gridRows)
+        {
+            return false;
+        }
+        
+        int [][]shape = block.getShape();
+        int w =block.getWidth();
+        int h =block.getHeight();
+        
+        for(int col = 0;col <w;col++)
+        {
+            for(int row = h-1;row >=0; row--)
+            {
+                if(shape[row][col] !=0)
+                {
+                    int x=col+block.getX();
+                    int y =row+block.getY()+1;
+                    if(y<0) break;
+                    if(background[y][x] != null)return false;
+                    break;
+                }
+            }
+        }
+        
+        return true;
+    }
+    private boolean checkLeft()
+    {
+        if(block.getLeftEdge() == 0) return false;
+        
+        int [][]shape = block.getShape();
+        int w =block.getWidth();
+        int h =block.getHeight();
+        
+        for(int row = 0;row <h;row++)
+        {
+            for(int col =0; col<w; col++)
+            {
+                if(shape[row][row] !=0)
+                {
+                    int x=col+block.getX() -1;
+                    int y =row+block.getY();
+                    if(y<0) break;
+                    if(background[y][x] != null)return false;
+                    break;
+                }
+            }
+        }  
+            return true;   
+        }
+    private boolean checkRight()
+    {
+        if(block.getRightEdge() == gridColumns) return false;
+        
+        int [][]shape = block.getShape();
+        int w =block.getWidth();
+        int h =block.getHeight();
+        
+        for(int row = 0;row <h;row++)
+        {
+            for(int col =w-1; col>=0; col--)
+            {
+                if(shape[row][row] !=0)
+                {
+                    int x=col+block.getX() -1;
+                    int y =row+block.getY();
+                    if(y<0) break;
+                    if(background[y][x] != null)return false;
+                    break;
+                }
+            }
+        }
+      
+        return true;
+    }
     private void moveBlockToBackground()
     {
         int[][] shape=block.getShape();
@@ -68,16 +175,6 @@ public class GameArea extends JPanel {
                 }
             }
         }
-    }
-    
-    private boolean checkBottom()
-    {
-        if(block.getBottomEdge()== gridRows)
-        {
-            return false;
-        }
-        
-        return true;
     }
     
     private void drawBlock(Graphics g)
